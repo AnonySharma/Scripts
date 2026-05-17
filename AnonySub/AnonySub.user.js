@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnonySub - Advanced Video Subtitle Overlay
 // @namespace    https://github.com/AnonySharma
-// @version      1.2
+// @version      1.4
 // @description  Adds an advanced, highly customizable subtitle overlay and transcript panel to HTML5 video players with true fullscreen support.
 // @author       AnonySharma
 // @homepage     https://github.com/AnonySharma
@@ -85,7 +85,7 @@
     let scrollTimeout = null;
     let currentMode = 'native'; 
 
-    // 4. INTERFACE DOM GENERATION
+    // 4. INTERFACE DOM GENERATION (Unified Typographic Clean-UI)
     const panel = document.createElement('div');
     panel.id = 'sub-offset-panel';
     panel.style.cssText = 'position:fixed; top:20px; right:20px; z-index:2147483647 !important; background:rgba(20, 20, 20, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color:#fff; font-family:sans-serif; display:flex; flex-direction:column; gap:12px; width:340px; padding:15px; border-radius:12px; border:1px solid rgba(250,250,250,0.15); box-shadow:0 12px 40px rgba(0,0,0,0.6); transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); overflow:hidden; pointer-events: auto !important;';
@@ -99,11 +99,11 @@
             <option value="native" selected>Native Video Track</option>
           </select>
         </div>
-        <div style="display:flex; align-items:center; gap:12px;">
-          <button id="searchToggleBtn" title="Search" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:13px; padding:0; display:none; transition:color 0.2s;">🔍</button>
-          <button id="syncTimeBtn" title="Sync Time" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:14px; padding:0; display:none; transition:color 0.2s;">🎯</button>
-          <button id="fsToggleBtn" title="Toggle Fullscreen (True Overlay)" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:13px; padding:0; transition:color 0.2s;">📺</button>
-          <button id="minimizeBtn" title="Minimize" style="background:none; border:none; color:#aaa; cursor:pointer; font-weight:bold; font-size:16px; padding:0 4px; transition:color 0.2s;">−</button>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <button id="searchToggleBtn" title="Search" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:17px; padding:0; display:none; transition:color 0.2s; line-height:1;">⌕</button>
+          <button id="syncTimeBtn" title="Sync Time" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:17px; padding:0; display:none; transition:color 0.2s; line-height:1;">⌖</button>
+          <button id="fsToggleBtn" title="Toggle Fullscreen" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:15px; padding:0; transition:color 0.2s; line-height:1;">⛶</button>
+          <button id="minimizeBtn" title="Minimize" style="background:none; border:none; color:#aaa; cursor:pointer; font-weight:bold; font-size:16px; padding:0 4px; transition:color 0.2s; line-height:1;">−</button>
         </div>
       </div>
 
@@ -221,6 +221,8 @@
     minimizeBtn.onmouseenter = () => minimizeBtn.style.color = '#fff'; minimizeBtn.onmouseleave = () => minimizeBtn.style.color = '#aaa';
     syncTimeBtn.onmouseenter = () => syncTimeBtn.style.color = '#fff'; syncTimeBtn.onmouseleave = () => syncTimeBtn.style.color = '#aaa';
     fsToggleBtn.onmouseenter = () => fsToggleBtn.style.color = '#fff'; fsToggleBtn.onmouseleave = () => fsToggleBtn.style.color = '#aaa';
+    searchToggleBtn.onmouseenter = () => { if(searchBarContainer.style.display === 'none') searchToggleBtn.style.color = '#fff'; };
+    searchToggleBtn.onmouseleave = () => { if(searchBarContainer.style.display === 'none') searchToggleBtn.style.color = '#aaa'; };
 
     transcriptBox.onscroll = () => {
       isUserScrolling = true;
@@ -340,7 +342,7 @@
       });
     };
 
-    // 8. O(1) PERFORMANCE ACTIVE TIMING CALCULATOR
+    // 8. O(1) ACTIVE TIMING CALCULATOR
     window._mySubTimeUpdate = () => {
       if (!originalCues.length) return;
       const textTrack = video.textTracks[video.textTracks.length - 1];
@@ -360,7 +362,7 @@
       });
 
       activeIds.forEach(cueId => {
-        const el = document.getElementById(`cue-line-${cueId}`);
+        const el = document.getElementById('cue-line-' + cueId);
         if (el && !el.dataset.active) {
           el.dataset.active = 'true';
           if (currentMode === 'transcript') {
@@ -372,6 +374,6 @@
     };
     
     video.addEventListener('timeupdate', window._mySubTimeUpdate);
-    console.log('%c[AnonySub] Secure Sandbox Running. Use the panel "📺" button or Double-Click the video to trigger Fullscreen.', 'color: #22c55e; font-weight: bold;');
+    console.log('%c[AnonySub] Secure Sandbox Running.', 'color: #22c55e; font-weight: bold;');
   }
 })();
