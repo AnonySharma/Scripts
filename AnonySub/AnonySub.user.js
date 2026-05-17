@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnonySub - Advanced Video Subtitle Overlay
 // @namespace    https://github.com/AnonySharma
-// @version      1.4
+// @version      1.5
 // @description  Adds an advanced, highly customizable subtitle overlay and transcript panel to HTML5 video players with true fullscreen support.
 // @author       AnonySharma
 // @homepage     https://github.com/AnonySharma
@@ -56,7 +56,15 @@
       video.removeEventListener('timeupdate', window._mySubTimeUpdate);
     }
 
-    // 3. MEDIA CONTROL CSS OVERRIDES
+    // 3. FONTAWESOME CDN & MEDIA CONTROL OVERRIDES
+    if (!document.getElementById('fa-cdn-link')) {
+      const faLink = document.createElement('link');
+      faLink.id = 'fa-cdn-link';
+      faLink.rel = 'stylesheet';
+      faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css';
+      document.head.appendChild(faLink);
+    }
+
     const styleEl = document.createElement('style');
     styleEl.id = 'anonysub-shield-styles';
     document.head.appendChild(styleEl);
@@ -85,11 +93,14 @@
     let scrollTimeout = null;
     let currentMode = 'native'; 
 
-    // 4. INTERFACE DOM GENERATION (Unified Typographic Clean-UI)
+    // 4. INTERFACE DOM GENERATION (Polished Grid with FontAwesome Icons)
     const panel = document.createElement('div');
     panel.id = 'sub-offset-panel';
     panel.style.cssText = 'position:fixed; top:20px; right:20px; z-index:2147483647 !important; background:rgba(20, 20, 20, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color:#fff; font-family:sans-serif; display:flex; flex-direction:column; gap:12px; width:340px; padding:15px; border-radius:12px; border:1px solid rgba(250,250,250,0.15); box-shadow:0 12px 40px rgba(0,0,0,0.6); transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1); overflow:hidden; pointer-events: auto !important;';
     
+    // Shared CSS string to ensure consistent, pixel-perfect alignment for buttons
+    const btnStyle = 'background:none; border:none; color:#aaa; cursor:pointer; width:24px; height:24px; display:inline-flex; align-items:center; justify-content:center; font-size:13px; padding:0; transition:color 0.2s; outline:none;';
+
     panel.innerHTML = `
       <div id="panelHeader" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:8px; font-size:12px;">
         <div style="display:flex; align-items:center; gap:8px;">
@@ -99,11 +110,11 @@
             <option value="native" selected>Native Video Track</option>
           </select>
         </div>
-        <div style="display:flex; align-items:center; gap:14px;">
-          <button id="searchToggleBtn" title="Search" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:17px; padding:0; display:none; transition:color 0.2s; line-height:1;">⌕</button>
-          <button id="syncTimeBtn" title="Sync Time" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:17px; padding:0; display:none; transition:color 0.2s; line-height:1;">⌖</button>
-          <button id="fsToggleBtn" title="Toggle Fullscreen" style="background:none; border:none; color:#aaa; cursor:pointer; font-size:15px; padding:0; transition:color 0.2s; line-height:1;">⛶</button>
-          <button id="minimizeBtn" title="Minimize" style="background:none; border:none; color:#aaa; cursor:pointer; font-weight:bold; font-size:16px; padding:0 4px; transition:color 0.2s; line-height:1;">−</button>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button id="searchToggleBtn" title="Search" style="${btnStyle} display:none;"><i class="fa-solid fa-magnifying-glass"></i></button>
+          <button id="syncTimeBtn" title="Sync Time" style="${btnStyle} display:none;"><i class="fa-solid fa-crosshairs"></i></button>
+          <button id="fsToggleBtn" title="Toggle Fullscreen" style="${btnStyle}"><i class="fa-solid fa-expand"></i></button>
+          <button id="minimizeBtn" title="Minimize" style="${btnStyle}"><i class="fa-solid fa-minus"></i></button>
         </div>
       </div>
 
@@ -123,7 +134,7 @@
         </div>
       </div>
       
-      <button id="maximizeBtn" title="Open Menu" style="display:none; background:transparent; border:none; color:#fff; cursor:pointer; font-size:24px; font-weight:300; width:100%; height:100%; text-align:center; display:flex; align-items:center; justify-content:center; outline:none; padding:0; line-height:1;">+</button>
+      <button id="maximizeBtn" title="Open Menu" style="display:none; background:transparent; border:none; color:#fff; cursor:pointer; font-size:20px; font-weight:300; width:100%; height:100%; text-align:center; display:flex; align-items:center; justify-content:center; outline:none; padding:0; line-height:1;"><i class="fa-solid fa-plus"></i></button>
     `;
     
     const maximizeBtn = panel.querySelector('#maximizeBtn');
@@ -218,11 +229,13 @@
 
     panel.onmouseenter = () => { if (maximizeBtn.style.display === 'flex') { panel.style.background = 'rgba(40, 40, 40, 0.95)'; panel.style.borderColor = 'rgba(56, 189, 248, 0.6)'; } };
     panel.onmouseleave = () => { if (maximizeBtn.style.display === 'flex') { panel.style.background = 'rgba(25, 25, 25, 0.85)'; panel.style.borderColor = 'rgba(255,255,255,0.2)'; } };
-    minimizeBtn.onmouseenter = () => minimizeBtn.style.color = '#fff'; minimizeBtn.onmouseleave = () => minimizeBtn.style.color = '#aaa';
-    syncTimeBtn.onmouseenter = () => syncTimeBtn.style.color = '#fff'; syncTimeBtn.onmouseleave = () => syncTimeBtn.style.color = '#aaa';
-    fsToggleBtn.onmouseenter = () => fsToggleBtn.style.color = '#fff'; fsToggleBtn.onmouseleave = () => fsToggleBtn.style.color = '#aaa';
-    searchToggleBtn.onmouseenter = () => { if(searchBarContainer.style.display === 'none') searchToggleBtn.style.color = '#fff'; };
-    searchToggleBtn.onmouseleave = () => { if(searchBarContainer.style.display === 'none') searchToggleBtn.style.color = '#aaa'; };
+    
+    // Smooth hover state hooks
+    const setupHover = (el) => {
+      el.onmouseenter = () => { if (el.style.color !== 'rgb(56, 189, 248)') el.style.color = '#fff'; };
+      el.onmouseleave = () => { if (el.style.color !== 'rgb(56, 189, 248)') el.style.color = '#aaa'; };
+    };
+    setupHover(minimizeBtn); setupHover(fsToggleBtn); setupHover(syncTimeBtn); setupHover(searchToggleBtn);
 
     transcriptBox.onscroll = () => {
       isUserScrolling = true;
