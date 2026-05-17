@@ -6,10 +6,10 @@ A curated collection of lightweight client-side scripts designed to bypass artif
 
 ## 🛠️ Scripts Directory
 
-| Script Name | Deployment Format | File Name | Quick Link / Source |
+| Script Name | Deployment Format | File Path | Quick Link / Source |
 | :--- | :--- | :--- | :--- |
-| **AnonySub** | Tampermonkey (Automation) | `AnonySub.user.js` | [📥 Direct Install](https://github.com/AnonySharma/Scripts/raw/main/AnonySub.user.js) |
-| **AnonySub** | Console Raw (Manual) | `AnonySub.console.js` | [📄 View Source](https://github.com/AnonySharma/Scripts/blob/main/AnonySub.console.js) |
+| **AnonySub** | Tampermonkey (Automation) | `AnonySub/AnonySub.user.js` | [📥 Direct Install](https://github.com/AnonySharma/Scripts/raw/main/AnonySub/AnonySub.user.js) |
+| **AnonySub** | Console Raw (Manual) | `AnonySub/AnonySub.console.js` | [📄 View Source](https://github.com/AnonySharma/Scripts/blob/main/AnonySub/AnonySub.console.js) |
 
 ---
 
@@ -27,12 +27,11 @@ Injects custom `.srt` or `.vtt` subtitle files directly over any web video strea
 
 #### Option 1: Userscript Manager (Recommended)
 Automatically runs the engine whenever an online video element is detected.
-
-👉 **[Click Here to Install Directly via Tampermonkey](https://github.com/AnonySharma/Scripts/raw/main/AnonySub.user.js)**
+👉 **[Click Here to Install Directly via Tampermonkey](https://github.com/AnonySharma/Scripts/raw/main/AnonySub/AnonySub.user.js)**
 
 #### Option 2: DevTools Console Injection
 For quick, extension-free execution on any active tab:
-1. Open the [AnonySub.console.js Source](https://github.com/AnonySharma/Scripts/raw/main/AnonySub.console.js) and copy the plain text code block.
+1. Open the [AnonySub.console.js Source](https://github.com/AnonySharma/Scripts/raw/main/AnonySub/AnonySub.console.js) and copy the plain text code block.
 2. Open your browser's dev console (`F12` or `Ctrl+Shift+I` / `Cmd+Option+I`).
 3. Paste the code and hit **Enter**.
 
