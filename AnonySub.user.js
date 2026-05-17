@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         NovaSub Shield - Advanced Video Subtitle Overlay
+// @name         AnonySub - Advanced Video Subtitle Overlay
 // @namespace    https://github.com/AnonySharma
-// @version      1.1
+// @version      1.2
 // @description  Adds an advanced, highly customizable subtitle overlay and transcript panel to HTML5 video players with true fullscreen support.
 // @author       AnonySharma
 // @homepage     https://github.com/AnonySharma
@@ -17,36 +17,32 @@
   const videoCheckInterval = setInterval(() => {
     const video = document.querySelector('video');
     if (video && !document.getElementById('sub-offset-panel')) {
-      // Found a video element and our panel isn't injected yet -> initialize
       clearInterval(videoCheckInterval);
-      bootNovaSub(video);
+      bootAnonySub(video);
     }
   }, 1000);
 
-  function bootNovaSub(video) {
-    console.log('%c[NovaSub Shield] Initializing Ultimate Chrome Container Engine...', 'color: #38bdf8; font-weight: bold; font-size: 14px;');
+  function bootAnonySub(video) {
+    console.log('%c[AnonySub] Initializing Ultimate Chrome Container Engine...', 'color: #38bdf8; font-weight: bold; font-size: 14px;');
 
     // 1. SCORCHED-EARTH GHOST PANEL WIPE
     document.querySelectorAll('#sub-offset-panel').forEach(p => p.remove());
-    document.querySelectorAll('#novasub-elite-styles, #novasub-shield-styles').forEach(s => s.remove());
+    document.querySelectorAll('#anonysub-core-styles, #anonysub-shield-styles').forEach(s => s.remove());
 
-    if (window._novaSharedTimers) {
-      window._novaSharedTimers.forEach(id => clearInterval(id));
+    if (window._anonySharedTimers) {
+      window._anonySharedTimers.forEach(id => clearInterval(id));
       console.log('%c[Clean] Cleared background thread cycles.', 'color: #ef4444;');
     }
-    window._novaSharedTimers = [];
+    window._anonySharedTimers = [];
 
-    // 2. DYNAMIC CONTROLLER WRAPPER INJECTION (Crucial Chrome Fix)
-    let wrapper = document.getElementById('novasub-wrapper');
+    // 2. DYNAMIC CONTROLLER WRAPPER INJECTION
+    let wrapper = document.getElementById('anonysub-wrapper');
     if (!wrapper) {
-      console.log('[NovaSub Shield] Creating dedicated structural parent wrapper...');
+      console.log('[AnonySub] Creating dedicated structural parent wrapper...');
       wrapper = document.createElement('div');
-      wrapper.id = 'novasub-wrapper';
-      
-      // Smooth container formatting to inherit page dimensions smoothly
+      wrapper.id = 'anonysub-wrapper';
       wrapper.style.cssText = 'position: relative; display: block; background: #000; width: 100%; height: 100%;';
       
-      // Inject wrapper safely around the active video asset
       video.parentNode.insertBefore(wrapper, video);
       wrapper.appendChild(video);
     }
@@ -60,9 +56,9 @@
       video.removeEventListener('timeupdate', window._mySubTimeUpdate);
     }
 
-    // 3. SHADOW DOM MEDIA CONTROL OVERRIDES
+    // 3. MEDIA CONTROL CSS OVERRIDES
     const styleEl = document.createElement('style');
-    styleEl.id = 'novasub-shield-styles';
+    styleEl.id = 'anonysub-shield-styles';
     document.head.appendChild(styleEl);
     
     function updateNativeSubtitleVisibility(shouldHideNatively) {
@@ -70,15 +66,13 @@
         #transcriptBox::-webkit-scrollbar { display: none !important; }
         #transcriptBox { -ms-overflow-style: none !important; scrollbar-width: none !important; }
         
-        /* HIDES THE NATIVE CHROME FULLSCREEN BUTTON TO PREVENT HARDWARE STREAM ISOLATION */
         video::-webkit-media-controls-fullscreen-button,
         video::-internal-media-controls-fullscreen-button { 
           display: none !important; 
         }
         
-        /* Fullscreen layout enforcement variables */
-        #novasub-wrapper:fullscreen { width: 100vw !important; height: 100vh !important; background: #000 !important; }
-        #novasub-wrapper:fullscreen video { width: 100% !important; height: 100% !important; max-height: 100vh !important; object-fit: contain !important; }
+        #anonysub-wrapper:fullscreen { width: 100vw !important; height: 100vh !important; background: #000 !important; }
+        #anonysub-wrapper:fullscreen video { width: 100% !important; height: 100% !important; max-height: 100vh !important; object-fit: contain !important; }
         
         ${shouldHideNatively ? 'video::cue, ::cue { opacity: 0 !important; background: transparent !important; color: transparent !important; }' : ''}
       `;
@@ -99,7 +93,7 @@
     panel.innerHTML = `
       <div id="panelHeader" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:8px; font-size:12px;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-weight:bold; color:#aaa;">NovaSub Shield:</span>
+          <span style="font-weight:bold; color:#aaa;">AnonySub:</span>
           <select id="modeToggle" style="background:#222; color:#fff; border:1px solid #444; border-radius:4px; padding:3px 6px; cursor:pointer; outline:none; font-size:11px;">
             <option value="transcript">Overlay Transcript</option>
             <option value="native" selected>Native Video Track</option>
@@ -135,7 +129,6 @@
     const maximizeBtn = panel.querySelector('#maximizeBtn');
     maximizeBtn.style.display = 'none';
 
-    // Append directly inside our secure parent container environment
     wrapper.appendChild(panel);
 
     const fileInput = panel.querySelector('#subFile');
@@ -158,7 +151,6 @@
       if (activeLine) activeLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // 5. SECURE WRAPPER FULLSCREEN HANDLERS (The True Fix Logic)
     const toggleSecureFullscreen = () => {
       const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
       if (!fsEl) {
@@ -272,7 +264,7 @@
     document.addEventListener('webkitfullscreenchange', window._currentFsHandler);
 
     const loopId = setInterval(enforceShieldLayout, 250);
-    window._novaSharedTimers.push(loopId);
+    window._anonySharedTimers.push(loopId);
 
     // 7. FILE PROCESSING PIPELINE
     fileInput.onchange = e => {
@@ -328,7 +320,7 @@
             line.onmouseenter = () => { if(!line.dataset.active) line.style.opacity = '0.8'; };
             line.onmouseleave = () => { if(!line.dataset.active) line.style.opacity = '0.4'; };
 
-          transcriptBox.appendChild(line);
+            transcriptBox.appendChild(line);
           });
 
           slider.disabled = false;
@@ -348,7 +340,7 @@
       });
     };
 
-    // 8. O(1) ACTIVE TIMING CALCULATOR
+    // 8. O(1) PERFORMANCE ACTIVE TIMING CALCULATOR
     window._mySubTimeUpdate = () => {
       if (!originalCues.length) return;
       const textTrack = video.textTracks[video.textTracks.length - 1];
@@ -380,6 +372,6 @@
     };
     
     video.addEventListener('timeupdate', window._mySubTimeUpdate);
-    console.log('%c[NovaSub Shield] Secure Sandbox Running. Use the panel "📺" button or Double-Click the video to trigger Fullscreen.', 'color: #22c55e; font-weight: bold;');
+    console.log('%c[AnonySub] Secure Sandbox Running. Use the panel "📺" button or Double-Click the video to trigger Fullscreen.', 'color: #22c55e; font-weight: bold;');
   }
 })();
